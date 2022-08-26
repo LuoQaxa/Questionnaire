@@ -1,0 +1,9 @@
+.transiton_wrap {
+  opacity: 1;
+  transition: all 2s ease-out;
+  visibility: visible;
+  &_hidden {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
