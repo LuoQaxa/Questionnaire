@@ -5,6 +5,7 @@ import Space from "./components/Space/index";
 import Transition from "./components/Transition/demo";
 import classNames from "classnames";
 import ToggleList from "./components/ToggleList";
+import Questionnaire from "./components/Questionnaire";
 
 function App() {
   // const [list, setList] = useState([1, 2]);
@@ -35,6 +36,7 @@ function App() {
         list={[1, 2, 3, 4]}
         listItemRender={(item) => <div>{item}</div>}
       ></ToggleList>
+      <Questionnaire></Questionnaire>
       {/* <div className="list_container">
         <ul
           ref={ulRef}
