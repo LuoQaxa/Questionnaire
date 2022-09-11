@@ -1,0 +1,45 @@
+.content {
+  margin-bottom: 60px;
+  font-size: 20px;
+}
+.content > span {
+  font-weight: bold;
+}
+.title {
+  font-size: 18px;
+  font-weight: bold;
+}
+.option_container {
+  width: 300px;
+  display: flex;
+  justify-content: space-around;
+}
+.option {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.option_box {
+  border: 1px solid #ccc;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.option_box:hover {
+  cursor: pointer;
+}
+.option_box:active {
+  background: #888;
+}
+.question {
+  font-size: 16px;
+}
+.over_content {
+  font-size: 30px;
+  color: #fb7299;
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+}
