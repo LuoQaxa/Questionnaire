@@ -5,17 +5,15 @@ import usePrevious from "./hooks/usePrevious";
 type Props = {};
 
 const groupA = [
-  [8, 16],
-  [16, 24],
-  [24, 32],
-  [8, 32],
+  [0, 6],
+  [6, 12],
+  [0, 12],
 ];
 
 const groupB = [
-  [1, 6],
-  [6, 14],
-  [14, 25],
-  [1, 25],
+  [0, 4],
+  [4, 12],
+  [0, 12],
 ];
 
 const defaultSS = 500;
@@ -121,47 +119,73 @@ export default function Questionnaire({}: Props) {
     }
   };
   const OptionItem = (key: number) => {
+    const month = group[round][key];
+    const monthWith = 43;
+    const text = month ? `after ${month} months obtain ` : `now obtain `;
     return (
-      <div className="option" onClick={() => onSelect(key)}>
-        <span>{`${group[round][key]}个月后获得`}</span>
-        <div className="option_box">{key === 0 ? optOne : optTwo}</div>
+      <div
+        style={{ left: monthWith * month }}
+        className="option"
+        onClick={() => onSelect(key)}
+      >
+        <span>{month}</span>
+        <span>{`${text}`}</span>
+        <span className="money">${key === 0 ? optOne : optTwo}</span>
       </div>
     );
   };
   return (
     <div>
       <div className="content">
-        你通过银行的抽奖活动，获得了一次兑换现金奖励的机会。但是这需要你在两种类别的奖项里进行选择，两个奖项会在
-        <span>不同的时间兑现，金额也并不相同</span>
-        。所以请您在后续的选择中，做出你心中<span>理想的选择</span>
-        。谢谢您的合作，我们将<span>不会获取您的个人信息</span>
-        ，完成选择后的数据我们也将仅用于科学研究。感谢您的配合。
+        You have been offered a chance to redeem a cash prize through the bank's
+        sweepstakes, but this requires you to choose between two categories of
+        prizes, each of which will be redeemable for{" "}
+        <span>different amounts at different times</span>, so please choose the
+        prize category that<span> best suits</span> you. Your cooperation is
+        greatly appreciated,
+        <span> as we will not obtain your personal information </span> and only
+        use it for scientific research after completing the selection process.
       </div>
       <div className="title">
-        本次测试有{group.length}轮，当前为第{round + 1}轮
+        The current round is the ({round + 1}/{group.length}) of three rounds in
+        this test
       </div>
-      <p className="question">
-        假设你购买了一个奖券并中奖，你可以在两种奖励当中选择一种：
-      </p>
+      <p className="question">Choosing between two rewards is up to you：</p>
       {loading ? (
-        <div>正在加载下一轮。。。</div>
+        <div>We are loading the next round...</div>
       ) : (
         <div className="option_container">
-          {Math.random() > 0.5 ? (
-            <>
-              {OptionItem(0)}
-              {OptionItem(1)}
-            </>
-          ) : (
-            <>
-              {OptionItem(1)}
-              {OptionItem(0)}
-            </>
-          )}
+          <div className="axle">
+            <div className="axle_seps">
+              {[...new Array(13).keys()].map((item) => (
+                <div
+                  style={{
+                    height: group[round].includes(item) ? "40px" : "20px",
+                    top: group[round].includes(item) ? "-40px" : "-20px",
+                  }}
+                  key={`${item}_separator`}
+                  className="separator"
+                ></div>
+              ))}
+            </div>
+            {OptionItem(0)}
+            {OptionItem(1)}
+            <div
+              className="top_line"
+              style={{
+                left: (520 / 12) * group[round][0],
+                right: (520 / 12) * (12 - group[round][1]),
+              }}
+            ></div>
+          </div>
         </div>
       )}
 
-      {isOver && <div className="over_content">恭喜你，完成问卷!</div>}
+      {isOver && (
+        <div className="over_content">
+          The test has been completed. Click on the link to proceed.
+        </div>
+      )}
     </div>
   );
 }

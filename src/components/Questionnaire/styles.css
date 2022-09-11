@@ -9,15 +9,46 @@
   font-size: 18px;
   font-weight: bold;
 }
-.option_container {
-  width: 300px;
+
+.axle {
+  width: 520px;
+  height: 2px;
+  background-color: #000;
+  margin: 60px 100px 100px 100px;
+  position: relative;
+  justify-content: space-between;
+}
+.axle_seps {
+  position: relative;
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
+}
+.separator {
+  height: 20px;
+  width: 2px;
+  background-color: #000;
+  position: relative;
+  top: -20px;
 }
 .option {
   display: flex;
   flex-direction: column;
   align-items: center;
+  position: absolute;
+  transform: translateX(-50%);
+  font-size: 16px;
+  min-width: 300px;
+  margin-top: -20px;
+}
+.money {
+  font-size: 20px;
+  font-weight: bold;
+}
+.top_line {
+  background: #000;
+  height: 2px;
+  position: absolute;
+  top: -40px;
 }
 .option_box {
   border: 1px solid #ccc;
@@ -27,14 +58,14 @@
   justify-content: center;
   align-items: center;
 }
-.option_box:hover {
+.option:hover {
   cursor: pointer;
 }
-.option_box:active {
+.option:active {
   background: #888;
 }
 .question {
-  font-size: 16px;
+  font-size: 18px;
 }
 .over_content {
   font-size: 30px;
