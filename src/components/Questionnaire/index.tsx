@@ -1,6 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import "./styles.css";
 import usePrevious from "./hooks/usePrevious";
+import { Input } from "antd";
+import Result from "./Result";
+import Learn from "./Learn";
 
 type Props = {};
 
@@ -18,7 +21,7 @@ const groupB = [
 
 const defaultSS = 500;
 const defaultLL = 1000;
-
+let indifference = 0;
 export default function Questionnaire({}: Props) {
   const [optOne, setOptOne] = useState(defaultSS);
   const [optTwo, setOptTwo] = useState(defaultLL);
@@ -38,6 +41,9 @@ export default function Questionnaire({}: Props) {
 
   const [loading, setLoading] = useState(false);
   const [lock, setLock] = useState(false);
+  const [profileId, setProfileId] = useState("");
+
+  const [step, setStep] = useState(0);
 
   /** 随机设置分组 */
   useEffect(() => {
@@ -54,26 +60,11 @@ export default function Questionnaire({}: Props) {
       Math.abs(LD - HU),
       result
     );
+
     if (result) {
-      const nextRound = group[round + 1];
-      if (nextRound) {
-        setLoading(true);
-        setTimeout(() => {
-          setRound(round + 1);
-          setOptOne(defaultSS);
-          setOptTwo(defaultLL);
-          // init LD and HU
-          setHU(500);
-          setLD(0);
-          firstCountRef.current = false;
-          setLoading(false);
-        }, 1000);
-        result = false;
-      } else {
-        setOver(true);
-      }
+      indifference = Math.abs((LD + HU) / 2);
+      setLoading(true);
     }
-    return result;
   };
 
   useEffect(() => {
@@ -134,6 +125,55 @@ export default function Questionnaire({}: Props) {
       </div>
     );
   };
+  const onLearnFinish = (step = 1) => {
+    setStep(step);
+  };
+  const initRound = () => {
+    setOptOne(defaultSS);
+    setOptTwo(defaultLL);
+    // init LD and HU
+    setHU(500);
+    setLD(0);
+    firstCountRef.current = false;
+  };
+  /**
+   * 下一轮
+   */
+  const onNextRound = () => {
+    const nextRound = group[round + 1];
+    if (!nextRound) {
+      setOver(true);
+      return;
+    }
+    setRound(round + 1);
+    initRound();
+    setLoading(false);
+  };
+  /**
+   * 重新当前轮
+   */
+  const restartCurRound = () => {
+    setRound(round);
+    initRound();
+    setLoading(false);
+  };
+  // 加两个按钮
+  /**
+   * 每轮结束后渲染对应的提示
+   */
+  const renderRoundConfirm = () => {
+    const [one, two] = group[round];
+    const oneTime = one === 0 ? "now" : `in ${one} months`;
+    return (
+      <div>
+        {`Depending on your choice, getting $500 ${oneTime} and getting ${indifference} in ${two} months is indifferent for you. Do you agree with this statement? If you agree, click Agree, if not, then click Disagree and make your selection again. `}
+        <div>
+          <button onClick={onNextRound}>Continue</button>
+          <button onClick={restartCurRound}>Disagree</button>
+        </div>
+      </div>
+    );
+  };
   return (
     <div>
       <div className="content">
@@ -141,50 +181,74 @@ export default function Questionnaire({}: Props) {
         sweepstakes, but this requires you to choose between two categories of
         prizes, each of which will be redeemable for{" "}
         <span>different amounts at different times</span>, so please choose the
-        prize category that<span> best suits</span> you. Your cooperation is
-        greatly appreciated,
+        prize category that<span> best suits</span> you. All outcomes were
+        <span>certain to occur</span> at the designated time. Your cooperation
+        is greatly appreciated,
         <span> as we will not obtain your personal information </span> and only
         use it for scientific research after completing the selection process.
       </div>
-      <div className="title">
-        The current round is the ({round + 1}/{group.length}) of three rounds in
-        this test
+      <div className="profile">
+        please input your profile Id：
+        <Input
+          value={profileId}
+          style={{ width: 300 }}
+          onChange={(e) => setProfileId(e.target.value)}
+        />
       </div>
-      <p className="question">Choosing between two rewards is up to you：</p>
-      {loading ? (
-        <div>We are loading the next round...</div>
-      ) : (
-        <div className="option_container">
-          <div className="axle">
-            <div className="axle_seps">
-              {[...new Array(13).keys()].map((item) => (
-                <div
-                  style={{
-                    height: group[round].includes(item) ? "40px" : "20px",
-                    top: group[round].includes(item) ? "-40px" : "-20px",
-                  }}
-                  key={`${item}_separator`}
-                  className="separator"
-                ></div>
-              ))}
-            </div>
-            {OptionItem(0)}
-            {OptionItem(1)}
-            <div
-              className="top_line"
-              style={{
-                left: (520 / 12) * group[round][0],
-                right: (520 / 12) * (12 - group[round][1]),
-              }}
-            ></div>
+      {step === 0 && <Learn onLearnFinish={onLearnFinish} />}
+      {step === 1 && (
+        <>
+          <div className="title">
+            The current round is the ({round + 1}/{group.length}) of three
+            rounds in this test
           </div>
-        </div>
-      )}
+          <p className="question">
+            Choosing between two rewards is up to you：
+          </p>
+          {loading ? (
+            <div>{renderRoundConfirm()}</div>
+          ) : (
+            <div className="option_container">
+              <div className="axle">
+                <div className="axle_seps">
+                  {[...new Array(13).keys()].map((item) => (
+                    <div
+                      style={{
+                        height: group[round].includes(item) ? "40px" : "20px",
+                        top: group[round].includes(item) ? "-40px" : "-20px",
+                      }}
+                      key={`${item}_separator`}
+                      className="separator"
+                    ></div>
+                  ))}
+                </div>
+                {OptionItem(0)}
+                {OptionItem(1)}
+                <div
+                  className="top_line"
+                  style={{
+                    left: (520 / 12) * group[round][0],
+                    right: (520 / 12) * (12 - group[round][1]),
+                  }}
+                ></div>
+              </div>
+            </div>
+          )}
 
-      {isOver && (
-        <div className="over_content">
-          The test has been completed. Click on the link to proceed.
-        </div>
+          {isOver && (
+            <Result
+              text="The test has been completed, paste the following code into the original test"
+              code="C7O3FZDA"
+            />
+          )}
+        </>
+      )}
+      {step === 2 && (
+        <Result
+          text="The test has been completed, paste the following code into the
+        original test"
+          code="C2T39WDM"
+        ></Result>
       )}
     </div>
   );

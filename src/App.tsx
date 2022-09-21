@@ -25,7 +25,7 @@ function App() {
 
   return (
     <div className="App">
-      <Space>
+      {/* <Space>
         <Button>1</Button>
         <Button>2</Button>
       </Space>
@@ -35,7 +35,7 @@ function App() {
         initNum={1}
         list={[1, 2, 3, 4]}
         listItemRender={(item) => <div>{item}</div>}
-      ></ToggleList>
+      ></ToggleList> */}
       <Questionnaire></Questionnaire>
       {/* <div className="list_container">
         <ul
