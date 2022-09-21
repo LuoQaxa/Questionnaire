@@ -182,7 +182,7 @@ export default function Questionnaire({}: Props) {
         prizes, each of which will be redeemable for{" "}
         <span>different amounts at different times</span>, so please choose the
         prize category that<span> best suits</span> you. All outcomes were
-        <span>certain to occur</span> at the designated time. Your cooperation
+        <span> certain to occur</span> at the designated time. Your cooperation
         is greatly appreciated,
         <span> as we will not obtain your personal information </span> and only
         use it for scientific research after completing the selection process.

@@ -9,14 +9,14 @@ const Result = (props: Props) => {
   const onCopy = () => {
     const result = copy(code);
     if (result) {
-      window.alert("复制成功");
+      window.alert("copy success");
     }
   };
   const { text, code } = props;
   return (
     <div>
       <p>{text}</p>
-      <span>{code}</span> <button onClick={onCopy}>复制</button>
+      <span>{code}</span> <button onClick={onCopy}>copy</button>
     </div>
   );
 };
