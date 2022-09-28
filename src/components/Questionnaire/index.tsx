@@ -46,19 +46,17 @@ export default function Questionnaire({}: Props) {
   const [profileId, setProfileId] = useState("");
 
   const [step, setStep] = useState(0);
+  const resultRef = useRef({})
 
   const app = getApp();
-  const callFunction = async () => {
-    try {
-      const res = await app.callFunction({
-        name: "hello"
-      });
-      console.log(res)
-    } catch (e) {
-      console.log(e)
-    }
-  };
-  callFunction()
+  const addData = async (data: any) => {
+    console.log('result', data)
+    const res = await app.callFunction({
+      name: "hello",
+      data
+    });
+  }
+  // callFunction()
 
   /** 随机设置分组 */
   useEffect(() => {
@@ -154,9 +152,16 @@ export default function Questionnaire({}: Props) {
   /**
    * 下一轮
    */
-  const onNextRound = () => {
+  const onNextRound = async () => {
     const nextRound = group[round + 1];
+    resultRef.current = {
+      profileId,
+      group: group[0][1] === 6 ? 'A' : 'B',
+      ...resultRef.current,
+      [`round${round}`]: indifference
+    }
     if (!nextRound) {
+      await addData(resultRef.current)
       setOver(true);
       return;
     }

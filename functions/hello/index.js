@@ -8,15 +8,10 @@ exports.main = async (event, context) => {
   const db = app.database()
   const questionCollection = db.collection('question')  
 
-  // todo
-  // your code here
   questionCollection.add({
-    data: {
-      name: 'luoqian'
-    }
+    data: event
   })
   return {
-    event,
-    message: 'hello world'
+    message: 'success'
   };
 };

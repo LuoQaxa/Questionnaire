@@ -1,6 +1,8 @@
 // 学习轮
 import React, { useState } from "react";
+import { Button } from 'antd'
 import "./styles.css";
+
 
 interface LearnProps {
   onLearnFinish: (step?: number) => void;
@@ -87,21 +89,21 @@ const Learn: React.FC<LearnProps> = (props) => {
           <div>
             Click continue if you understand what you are about to do. Click
             exit if you are confused or don't want to proceed.
-            <button
+            <Button
               onClick={() => {
                 onLearnFinish(2);
               }}
               style={{ marginRight: 10 }}
             >
               Exit
-            </button>
-            <button
+            </Button>
+            <Button
               onClick={() => {
                 onLearnFinish();
               }}
             >
               Continue
-            </button>
+            </Button>
           </div>
         </>
       )}
