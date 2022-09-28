@@ -4,6 +4,8 @@ import usePrevious from "./hooks/usePrevious";
 import { Input, Button, Space } from "antd";
 import Result from "./Result";
 import Learn from "./Learn";
+import { getApp } from "../../tcb";
+
 
 type Props = {};
 
@@ -44,6 +46,19 @@ export default function Questionnaire({}: Props) {
   const [profileId, setProfileId] = useState("");
 
   const [step, setStep] = useState(0);
+
+  const app = getApp();
+  const callFunction = async () => {
+    try {
+      const res = await app.callFunction({
+        name: "hello"
+      });
+      console.log(res)
+    } catch (e) {
+      console.log(e)
+    }
+  };
+  callFunction()
 
   /** 随机设置分组 */
   useEffect(() => {

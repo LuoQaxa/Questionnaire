@@ -1,0 +1,29 @@
+{
+    "envId": "hello-cloudbase-0g4f2zq6cc46138b",
+    "version": "2.0",
+    "$schema": "https://framework-1258016615.tcloudbaseapp.com/schema/latest.json",
+    "functionRoot": "./functions",
+    "functions": [
+        {
+            "name": "hello",
+            "timeout": 5,
+            "envVariables": {},
+            "runtime": "Nodejs10.15",
+            "memory": 256,
+            "invoke": true
+        }
+    ],
+    "region": "ap-shanghai",
+    "framework": {
+        "name": "question",
+        "plugins": {
+            "react": {
+                "use": "@cloudbase/framework-plugin-website",
+                "inputs": {
+                    "buildCommand": "npm run build",
+                    "outputPath": "build"
+                }
+            }
+        }
+    }
+}
