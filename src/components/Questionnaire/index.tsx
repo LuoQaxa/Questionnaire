@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import "./styles.css";
 import usePrevious from "./hooks/usePrevious";
-import { Input } from "antd";
+import { Input, Button, Space } from "antd";
 import Result from "./Result";
 import Learn from "./Learn";
 
@@ -167,10 +167,12 @@ export default function Questionnaire({}: Props) {
     return (
       <div>
         {`Depending on your choice, getting $500 ${oneTime} and getting $${indifference} in ${two} months is indifferent for you. Do you agree with this statement? If you agree, click Agree, if not, then click Disagree and make your selection again. `}
-        <div>
-          <button onClick={onNextRound}>Continue</button>
-          <button onClick={restartCurRound}>Disagree</button>
-        </div>
+        <Space>
+          <Button onClick={restartCurRound}>Disagree</Button>
+          <Button type="primary" onClick={onNextRound}>
+            Continue
+          </Button>
+        </Space>
       </div>
     );
   };

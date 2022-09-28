@@ -62,21 +62,26 @@ const Learn: React.FC<LearnProps> = (props) => {
     <div>
       <div>
         Before the experiment starts, please complete the following training
-        test. From today to next year, the intervals 0-12 below represent the 12
-        months, each cell representing one month, and you will have to choose
-        the lottery ticket corresponding to each delay. For example, the choice
-        below is between getting $35 immediately and getting $550 in 6 weeks.
-        You can click on the option.
+        test. From today to next year,
+        <span>
+          the intervals 0-12 below represent the 12 months, each cell
+          representing one month,
+        </span>
+        and you will have to choose the lottery ticket corresponding to each
+        delay. For example, the choice below is between getting $35 immediately
+        and getting $550 in 6 weeks. You can click on the option.
       </div>
       {renderQuestion()}
       {selectNum >= 1 && (
         <>
           <div>
-            After making the first choice, you will then make a second choice.
-            The time interval does not change, but the amount of the lottery
-            ticket changes. And you will need to make multiple choices in each
-            round until the calculation stops (which won't take long). There are
-            three rounds in the experiment.
+            After making the first choice, you will then make next one.
+            <span>
+              The interval does not change, but the amount of the award changes.
+            </span>
+            And you need to make multiple choices in following round until the
+            calculation stops (which won't take long). There are three rounds in
+            the experiment.
           </div>
           {renderQuestion({ optOne: 35, optTwo: 450 })}
           <div>
@@ -88,14 +93,14 @@ const Learn: React.FC<LearnProps> = (props) => {
               }}
               style={{ marginRight: 10 }}
             >
-              Exit{" "}
+              Exit
             </button>
             <button
               onClick={() => {
                 onLearnFinish();
               }}
             >
-              Continue{" "}
+              Continue
             </button>
           </div>
         </>

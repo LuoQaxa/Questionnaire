@@ -1,5 +1,6 @@
 import React from "react";
 import copy from "copy-to-clipboard";
+import { Button, Space } from "antd";
 type Props = {
   text: string;
   code: string;
@@ -16,7 +17,12 @@ const Result = (props: Props) => {
   return (
     <div>
       <p>{text}</p>
-      <span>{code}</span> <button onClick={onCopy}>copy</button>
+      <Space>
+        <span>{code}</span>
+        <Button type="primary" onClick={onCopy}>
+          copy
+        </Button>
+      </Space>
     </div>
   );
 };
