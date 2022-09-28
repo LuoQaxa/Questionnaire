@@ -166,7 +166,7 @@ export default function Questionnaire({}: Props) {
     const oneTime = one === 0 ? "now" : `in ${one} months`;
     return (
       <div>
-        {`Depending on your choice, getting $500 ${oneTime} and getting ${indifference} in ${two} months is indifferent for you. Do you agree with this statement? If you agree, click Agree, if not, then click Disagree and make your selection again. `}
+        {`Depending on your choice, getting $500 ${oneTime} and getting $${indifference} in ${two} months is indifferent for you. Do you agree with this statement? If you agree, click Agree, if not, then click Disagree and make your selection again. `}
         <div>
           <button onClick={onNextRound}>Continue</button>
           <button onClick={restartCurRound}>Disagree</button>
