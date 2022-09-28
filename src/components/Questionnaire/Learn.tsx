@@ -98,6 +98,7 @@ const Learn: React.FC<LearnProps> = (props) => {
               Exit
             </Button>
             <Button
+              type="primary"
               onClick={() => {
                 onLearnFinish();
               }}
