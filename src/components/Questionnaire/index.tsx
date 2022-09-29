@@ -1,11 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
 import "./styles.css";
 import usePrevious from "./hooks/usePrevious";
-import { Input, Button, Space } from "antd";
+import { Input, Button, Space, Modal } from "antd";
 import Result from "./Result";
 import Learn from "./Learn";
 import { getApp } from "../../tcb";
-
 
 type Props = {};
 
@@ -46,16 +45,16 @@ export default function Questionnaire({}: Props) {
   const [profileId, setProfileId] = useState("");
 
   const [step, setStep] = useState(0);
-  const resultRef = useRef({})
+  const resultRef = useRef({});
 
   const app = getApp();
   const addData = async (data: any) => {
-    console.log('result', data)
+    console.log("result", data);
     const res = await app.callFunction({
       name: "hello",
-      data
+      data,
     });
-  }
+  };
   // callFunction()
 
   /** 随机设置分组 */
@@ -139,6 +138,13 @@ export default function Questionnaire({}: Props) {
     );
   };
   const onLearnFinish = (step = 1) => {
+    if (!profileId) {
+      Modal.warning({
+        title: "warning",
+        content: "Please input your profileId",
+      });
+      return;
+    }
     setStep(step);
   };
   const initRound = () => {
@@ -156,12 +162,12 @@ export default function Questionnaire({}: Props) {
     const nextRound = group[round + 1];
     resultRef.current = {
       profileId,
-      group: group[0][1] === 6 ? 'A' : 'B',
+      group: group[0][1] === 6 ? "A" : "B",
       ...resultRef.current,
-      [`round${round}`]: indifference
-    }
+      [`round${round}`]: indifference,
+    };
     if (!nextRound) {
-      await addData(resultRef.current)
+      await addData(resultRef.current);
       setOver(true);
       return;
     }
