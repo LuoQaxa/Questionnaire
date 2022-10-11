@@ -1,13 +1,12 @@
 // 学习轮
 import React, { useState } from "react";
-import { Button } from 'antd'
+import { Button } from "antd";
 import "./styles.css";
-
 
 interface LearnProps {
   onLearnFinish: (step?: number) => void;
 }
-const group = [0, 6];
+const group = [1, 10];
 const Learn: React.FC<LearnProps> = (props) => {
   const { onLearnFinish } = props;
   const [selectNum, setSelectNum] = useState(0);
@@ -19,7 +18,7 @@ const Learn: React.FC<LearnProps> = (props) => {
       <div className="option_container">
         <div className="axle">
           <div className="axle_seps">
-            {[...new Array(13).keys()].map((item) => (
+            {[...new Array(29).keys()].map((item) => (
               <div
                 style={{
                   height: group.includes(item) ? "40px" : "20px",
@@ -35,8 +34,8 @@ const Learn: React.FC<LearnProps> = (props) => {
           <div
             className="top_line"
             style={{
-              left: (520 / 12) * group[0],
-              right: (520 / 12) * (12 - group[1]),
+              left: (520 / 28) * group[0],
+              right: (520 / 28) * (28 - group[1]),
             }}
           ></div>
         </div>
@@ -46,8 +45,8 @@ const Learn: React.FC<LearnProps> = (props) => {
   const OptionItem = (key: number, options = { optOne: 35, optTwo: 550 }) => {
     const month = group[key];
     const { optOne, optTwo } = options;
-    const monthWith = 43;
-    const text = month ? `after ${month} months obtain ` : `now obtain `;
+    const monthWith = 18.5;
+    const text = month ? `第 ${month} 天获得 ` : `立即获得 `;
     return (
       <div
         style={{ left: monthWith * month }}
@@ -56,46 +55,35 @@ const Learn: React.FC<LearnProps> = (props) => {
       >
         <span>{month}</span>
         <span>{`${text}`}</span>
-        <span className="money">${key === 0 ? optOne : optTwo}</span>
+        <span className="money">{key === 0 ? optOne : optTwo}</span>
       </div>
     );
   };
   return (
     <div>
       <div>
-        Before the experiment starts, please complete the following training
-        test. From today to next year,
-        <span>
-          the intervals 0-12 below represent the 12 months, each cell
-          representing one month,
-        </span>
-        and you will have to choose the lottery ticket corresponding to each
-        delay. For example, the choice below is between getting $35 immediately
-        and getting $550 in 6 weeks. You can click on the option.
+        实验开始前，请完成以下训练测试。从今天到明年，
+        <span>下面的区间0-28代表28天，每个小格代表一个天</span>，
+        你需要选择每一个延迟对应的兑换金额。例如，下面的选择是1天后得到35元和10天后得到550元。您现在需要单击您的选择
       </div>
       {renderQuestion()}
       {selectNum >= 1 && (
         <>
           <div>
-            After making the first choice, you will then make next one.
-            <span>
-              The interval does not change, but the amount of the award changes.
-            </span>
-            And you need to make multiple choices in following round until the
-            calculation stops (which won't take long). There are three rounds in
-            the experiment.
+            在做出第一个选择之后，你会做出下一个选择。
+            <span>每轮时间间隔没有改变，但是奖金的金额改变了</span>。
+            你需要在下一轮中做出多个选择，直到计算停止(不会花很长时间)。这个实验有6轮。
           </div>
           {renderQuestion({ optOne: 35, optTwo: 450 })}
           <div>
-            Click continue if you understand what you are about to do. Click
-            exit if you are confused or don't want to proceed.
+            如果您明白了您要做的选择，请单击继续。如果您感到困惑或不想继续进行，请单击退出。
             <Button
               onClick={() => {
                 onLearnFinish(2);
               }}
               style={{ marginRight: 10 }}
             >
-              Exit
+              退出
             </Button>
             <Button
               type="primary"
@@ -103,7 +91,7 @@ const Learn: React.FC<LearnProps> = (props) => {
                 onLearnFinish();
               }}
             >
-              Continue
+              继续
             </Button>
           </div>
         </>

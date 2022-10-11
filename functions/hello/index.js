@@ -5,13 +5,11 @@ exports.main = async (event, context) => {
     env: cloud.SYMBOL_CURRENT_ENV,
   });
 
-  const db = app.database()
-  const questionCollection = db.collection('question')  
+  const db = app.database();
+  const questionCollection = db.collection("question1");
 
-  questionCollection.add({
-    data: event
-  })
+  questionCollection.add(event);
   return {
-    message: 'success'
+    message: "success",
   };
 };

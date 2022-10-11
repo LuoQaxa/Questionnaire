@@ -5,19 +5,26 @@ import { Input, Button, Space, Modal } from "antd";
 import Result from "./Result";
 import Learn from "./Learn";
 import { getApp } from "../../tcb";
+import { createCode } from "./createCode";
 
 type Props = {};
 
 const groupA = [
-  [0, 6],
-  [6, 12],
-  [0, 12],
+  [7, 14, 1000],
+  [14, 21, 1000],
+  [21, 28, 1000],
+  [7, 21, 1500],
+  [14, 28, 1500],
+  [7, 28, 2000],
 ];
 
 const groupB = [
-  [0, 4],
-  [4, 12],
-  [0, 12],
+  [7, 10, 720],
+  [10, 16, 930],
+  [16, 28, 1360],
+  [7, 16, 1080],
+  [10, 28, 1790],
+  [7, 28, 2000],
 ];
 
 const defaultSS = 500;
@@ -45,6 +52,9 @@ export default function Questionnaire({}: Props) {
   const [profileId, setProfileId] = useState("");
 
   const [step, setStep] = useState(0);
+  const [llDisabled, setLlDisabed] = useState(false);
+  const [isSubmiting, setIsSubmit] = useState(false);
+  const [resultCode, setCode] = useState("");
   const resultRef = useRef({});
 
   const app = getApp();
@@ -55,15 +65,20 @@ export default function Questionnaire({}: Props) {
       data,
     });
   };
-  // callFunction()
 
   /** 随机设置分组 */
   useEffect(() => {
     const group = Math.random() > 0.5 ? groupA : groupB;
     setGroup(group);
+    setOptTwo(group[round][2]);
   }, []);
   const getFloorInt = (num: number) => Math.floor(num / 10) * 10;
 
+  const maxLimitWarn = () => {
+    Modal.warn({
+      content: "你选择的数量不能超过$3000",
+    });
+  };
   const handleOver = () => {
     let result = Math.abs(LD - HU) <= 10;
     console.log(
@@ -75,6 +90,13 @@ export default function Questionnaire({}: Props) {
 
     if (result) {
       indifference = Math.abs((LD + HU) / 2);
+      setLlDisabed(false);
+      // 大于indiff提示，并且禁选LL
+      if (indifference > 2945) {
+        setLlDisabed(true);
+        maxLimitWarn();
+        return;
+      }
       setLoading(true);
     }
   };
@@ -121,10 +143,14 @@ export default function Questionnaire({}: Props) {
       setLD(optTwo);
     }
   };
+
   const OptionItem = (key: number) => {
+    if (key === 1 && llDisabled) {
+      maxLimitWarn();
+    }
     const month = group[round][key];
-    const monthWith = 43;
-    const text = month ? `after ${month} months obtain ` : `now obtain `;
+    const monthWith = 18.5;
+    const text = month ? `第 ${month} 天 获得 ` : `立即获得 `;
     return (
       <div
         style={{ left: monthWith * month }}
@@ -133,15 +159,15 @@ export default function Questionnaire({}: Props) {
       >
         <span>{month}</span>
         <span>{`${text}`}</span>
-        <span className="money">${key === 0 ? optOne : optTwo}</span>
+        <span className="money">{key === 0 ? optOne : optTwo}</span>
       </div>
     );
   };
   const onLearnFinish = (step = 1) => {
-    if (!profileId) {
+    if (!profileId && step === 1) {
       Modal.warning({
-        title: "warning",
-        content: "Please input your profileId",
+        title: "警告",
+        content: "请输入你刚才复制的值",
       });
       return;
     }
@@ -149,7 +175,8 @@ export default function Questionnaire({}: Props) {
   };
   const initRound = () => {
     setOptOne(defaultSS);
-    setOptTwo(defaultLL);
+    // 初始化每一轮的LL
+    setOptTwo(group[round][2]);
     // init LD and HU
     setHU(500);
     setLD(0);
@@ -167,7 +194,14 @@ export default function Questionnaire({}: Props) {
       [`round${round}`]: indifference,
     };
     if (!nextRound) {
-      await addData(resultRef.current);
+      if (isSubmiting) return;
+      setIsSubmit(true);
+      const code = createCode();
+      setCode(code);
+      await addData({
+        code,
+        ...resultRef.current,
+      });
       setOver(true);
       return;
     }
@@ -189,14 +223,13 @@ export default function Questionnaire({}: Props) {
    */
   const renderRoundConfirm = () => {
     const [one, two] = group[round];
-    const oneTime = one === 0 ? "now" : `in ${one} months`;
     return (
       <div>
-        {`Depending on your choice, getting $500 ${oneTime} and getting $${indifference} in ${two} months is indifferent for you. Do you agree with this statement? If you agree, click Agree, if not, then click Disagree and make your selection again. `}
+        {`根据你的选择，${one}天后得到500元和 ${two}天后得到${indifference}元对你来说是几乎一样的。你同意这种说法吗?如果您同意，则单击同意，如果不同意，则单击不同意并再次进行选择。`}
         <Space>
-          <Button onClick={restartCurRound}>Disagree</Button>
+          <Button onClick={restartCurRound}>不同意</Button>
           <Button type="primary" onClick={onNextRound}>
-            Continue
+            同意
           </Button>
         </Space>
       </div>
@@ -205,18 +238,15 @@ export default function Questionnaire({}: Props) {
   return (
     <div>
       <div className="content">
-        You have been offered a chance to redeem a cash prize through the bank's
-        sweepstakes, but this requires you to choose between two categories of
-        prizes, each of which will be redeemable for{" "}
-        <span>different amounts at different times</span>, so please choose the
-        prize category that<span> best suits</span> you. All outcomes were
-        <span> certain to occur</span> at the designated time. Your cooperation
-        is greatly appreciated,
-        <span> as we will not obtain your personal information </span> and only
-        use it for scientific research after completing the selection process.
+        您通过银行的抽奖活动获得了兑换现金的权益，但这需要您在两类奖券中进行选择，
+        每一类奖券在<span>不同的时间可兑换不同的金额</span>，因此请选择
+        <span>最适合</span>您的奖券类别。 所有的结果都一定会在
+        <span>指定的时间</span>发生。
+        <span>非常感谢您的合作，我们不会获取您的个人信息</span>
+        ，只会在完成筛选过程后用于科学研究。
       </div>
       <div className="profile">
-        please input your profile Id：
+        请输入您刚才复制的数值：
         <Input
           value={profileId}
           style={{ width: 300 }}
@@ -227,19 +257,16 @@ export default function Questionnaire({}: Props) {
       {step === 1 && (
         <>
           <div className="title">
-            The current round is the ({round + 1}/{group.length}) of three
-            rounds in this test
+            现在是6轮决策中的（({round + 1}/{group.length}) 轮
           </div>
-          <p className="question">
-            Choosing between two rewards is up to you：
-          </p>
+          <p className="question">请在一下两种奖励中进行选择：</p>
           {loading ? (
             <div>{renderRoundConfirm()}</div>
           ) : (
             <div className="option_container">
               <div className="axle">
                 <div className="axle_seps">
-                  {[...new Array(13).keys()].map((item) => (
+                  {[...new Array(29).keys()].map((item) => (
                     <div
                       style={{
                         height: group[round].includes(item) ? "40px" : "20px",
@@ -255,8 +282,8 @@ export default function Questionnaire({}: Props) {
                 <div
                   className="top_line"
                   style={{
-                    left: (520 / 12) * group[round][0],
-                    right: (520 / 12) * (12 - group[round][1]),
+                    left: (520 / 28) * group[round][0],
+                    right: (520 / 28) * (28 - group[round][1]),
                   }}
                 ></div>
               </div>
@@ -265,17 +292,16 @@ export default function Questionnaire({}: Props) {
 
           {isOver && (
             <Result
-              text="The test has been completed, paste the following code into the original test"
-              code="C7O3FZDA"
+              text="测试已经结束，请将以下代码粘贴到原始测试中"
+              code={resultCode}
             />
           )}
         </>
       )}
       {step === 2 && (
         <Result
-          text="The test has been completed, paste the following code into the
-        original test"
-          code="C2T39WDM"
+          text="测试已经结束，请将以下代码粘贴到原始测试中"
+          code={"C2T39WDM"}
         ></Result>
       )}
     </div>
