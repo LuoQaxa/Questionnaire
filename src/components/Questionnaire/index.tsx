@@ -8,7 +8,9 @@ import { getApp } from "../../tcb";
 import { createCode } from "./createCode";
 
 type Props = {};
-
+const alexWidth = 800
+const gridCount = 28
+const gridWidth = alexWidth / gridCount
 const groupA = [
   [7, 14, 1000],
   [14, 21, 1000],
@@ -26,6 +28,7 @@ const groupB = [
   [10, 28, 1790],
   [7, 28, 2000],
 ];
+
 
 const defaultSS = 500;
 const defaultLL = 1000;
@@ -51,8 +54,7 @@ export default function Questionnaire({}: Props) {
   const [lock, setLock] = useState(false);
   const [profileId, setProfileId] = useState("");
 
-  const [step, setStep] = useState(0);
-  const [llDisabled, setLlDisabed] = useState(false);
+  const [step, setStep] = useState(1);
   const [isSubmiting, setIsSubmit] = useState(false);
   const [resultCode, setCode] = useState("");
   const resultRef = useRef({});
@@ -74,29 +76,22 @@ export default function Questionnaire({}: Props) {
   }, []);
   const getFloorInt = (num: number) => Math.floor(num / 10) * 10;
 
-  const maxLimitWarn = () => {
-    Modal.warn({
-      content: "你选择的数量不能超过$3000",
-    });
-  };
+  // const maxLimitWarn = () => {
+  //   Modal.warn({
+  //     content: "你选择的数量不能超过3000",
+  //   });
+  // };
   const handleOver = () => {
     let result = Math.abs(LD - HU) <= 10;
     console.log(
       "handleOver",
       `Math.abs(${LD} - ${HU}) <= 10`,
       Math.abs(LD - HU),
-      result
+      result,
     );
 
     if (result) {
       indifference = Math.abs((LD + HU) / 2);
-      setLlDisabed(false);
-      // 大于indiff提示，并且禁选LL
-      if (indifference > 2945) {
-        setLlDisabed(true);
-        maxLimitWarn();
-        return;
-      }
       setLoading(true);
     }
   };
@@ -109,6 +104,8 @@ export default function Questionnaire({}: Props) {
 
     const m = Math.abs((LD - HU) / 2);
     let nextOptTwo = 0;
+    console.log('HU', HU)
+    console.log('prevHU', prevHU)
     if (HU !== prevHU && lock) {
       console.log("hu changed");
       if (!firstCountRef.current) {
@@ -145,11 +142,8 @@ export default function Questionnaire({}: Props) {
   };
 
   const OptionItem = (key: number) => {
-    if (key === 1 && llDisabled) {
-      maxLimitWarn();
-    }
     const month = group[round][key];
-    const monthWith = 18.5;
+    const monthWith = gridWidth;
     const text = month ? `第 ${month} 天 获得 ` : `立即获得 `;
     return (
       <div
@@ -157,7 +151,7 @@ export default function Questionnaire({}: Props) {
         className="option"
         onClick={() => onSelect(key)}
       >
-        <span>{month}</span>
+        <span className="triangle"></span>
         <span>{`${text}`}</span>
         <span className="money">{key === 0 ? optOne : optTwo}</span>
       </div>
@@ -257,7 +251,7 @@ export default function Questionnaire({}: Props) {
       {step === 1 && (
         <>
           <div className="title">
-            现在是6轮决策中的（({round + 1}/{group.length}) 轮
+            现在是6轮决策中的({round + 1}/{group.length}) 轮
           </div>
           <p className="question">请在一下两种奖励中进行选择：</p>
           {loading ? (
@@ -266,7 +260,7 @@ export default function Questionnaire({}: Props) {
             <div className="option_container">
               <div className="axle">
                 <div className="axle_seps">
-                  {[...new Array(29).keys()].map((item) => (
+                  {[...new Array(gridCount + 1).keys()].map((item) => (
                     <div
                       style={{
                         height: group[round].includes(item) ? "40px" : "20px",
@@ -282,8 +276,8 @@ export default function Questionnaire({}: Props) {
                 <div
                   className="top_line"
                   style={{
-                    left: (520 / 28) * group[round][0],
-                    right: (520 / 28) * (28 - group[round][1]),
+                    left: gridWidth * group[round][0],
+                    right: gridWidth * (gridCount - group[round][1]),
                   }}
                 ></div>
               </div>
