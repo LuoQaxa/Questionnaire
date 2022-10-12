@@ -54,7 +54,7 @@ export default function Questionnaire({}: Props) {
   const [lock, setLock] = useState(false);
   const [profileId, setProfileId] = useState("");
 
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState(0);
   const [isSubmiting, setIsSubmit] = useState(false);
   const [resultCode, setCode] = useState("");
   const resultRef = useRef({});
