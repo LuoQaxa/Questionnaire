@@ -10,7 +10,7 @@ import { createCode } from "./createCode";
 type Props = {};
 const alexWidth = 800
 const gridCount = 28
-const gridWidth = alexWidth / gridCount
+export const gridWidth = alexWidth / gridCount
 const groupA = [
   [7, 14, 1000],
   [14, 21, 1000],

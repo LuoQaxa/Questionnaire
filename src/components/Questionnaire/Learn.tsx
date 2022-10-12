@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { Button } from "antd";
 import "./styles.css";
+import { gridWidth } from './index'
 
 interface LearnProps {
   onLearnFinish: (step?: number) => void;
@@ -34,8 +35,8 @@ const Learn: React.FC<LearnProps> = (props) => {
           <div
             className="top_line"
             style={{
-              left: (520 / 28) * group[0],
-              right: (520 / 28) * (28 - group[1]),
+              left: gridWidth * group[0],
+              right: gridWidth * (28 - group[1]),
             }}
           ></div>
         </div>
@@ -45,7 +46,7 @@ const Learn: React.FC<LearnProps> = (props) => {
   const OptionItem = (key: number, options = { optOne: 35, optTwo: 550 }) => {
     const month = group[key];
     const { optOne, optTwo } = options;
-    const monthWith = 18.5;
+    const monthWith = gridWidth;
     const text = month ? `第 ${month} 天获得 ` : `立即获得 `;
     return (
       <div
@@ -53,7 +54,7 @@ const Learn: React.FC<LearnProps> = (props) => {
         className="option"
         onClick={() => onSelect()}
       >
-        <span>{month}</span>
+        <span className="triangle"></span>
         <span>{`${text}`}</span>
         <span className="money">{key === 0 ? optOne : optTwo}</span>
       </div>
@@ -69,13 +70,13 @@ const Learn: React.FC<LearnProps> = (props) => {
       {renderQuestion()}
       {selectNum >= 1 && (
         <>
-          <div>
+          <div style={{ marginTop: 130 }}>
             在做出第一个选择之后，你会做出下一个选择。
             <span>每轮时间间隔没有改变，但是奖金的金额改变了</span>。
             你需要在下一轮中做出多个选择，直到计算停止(不会花很长时间)。这个实验有6轮。
           </div>
           {renderQuestion({ optOne: 35, optTwo: 450 })}
-          <div>
+          <div style={{ marginTop: 130 }}>
             如果您明白了您要做的选择，请单击继续。如果您感到困惑或不想继续进行，请单击退出。
             <Button
               onClick={() => {
