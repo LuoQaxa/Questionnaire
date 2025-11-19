@@ -48,4 +48,4 @@ jobs:
           tags: questionnaire-frontend:latest
           load: true
           cache-from: type=gha
-          cache-to: type=gha,mode=max
+          cache-to: type=gha,mode=min
