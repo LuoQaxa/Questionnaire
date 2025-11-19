@@ -5,7 +5,7 @@ WORKDIR /app
 # Copy dependency manifests first for better layer caching
 COPY package.json yarn.lock* ./
 # Install dependencies (handle absence of yarn.lock gracefully)
-RUN if [ -f yarn.lock ]; then yarn install --frozen-lockfile; else yarn install; fi
+RUN yarn install --frozen-lockfile
 # Copy the rest of the source
 COPY . .
 # Build static assets
