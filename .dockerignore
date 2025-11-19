@@ -1,22 +1,22 @@
-# # Ignore dependencies and build caches
-# node_modules
-# build
+# Ignore dependencies and build caches
+node_modules
+build
 
-# # VCS & CI metadata
-# .git
-# .github
+# VCS & CI metadata
+.git
+.github
 
-# # Logs & temp files
-# npm-debug.log*
-# yarn-error.log*
-# .DS_Store
+# Logs & temp files
+npm-debug.log*
+yarn-error.log*
+.DS_Store
 
-# # Local env files
-# .env*
+# Local env files
+.env*
 
-# # Tests (not required for production image)
-# **/__tests__
-# **/*.test.*
+# Tests (not required for production image)
+**/__tests__
+**/*.test.*
 
-# # Editor artifacts
-# *.swp
+# Editor artifacts
+*.swp
