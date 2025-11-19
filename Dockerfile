@@ -3,7 +3,7 @@
 FROM node:18-alpine AS build
 WORKDIR /app
 # Copy dependency manifests first for better layer caching
-COPY package.json yarn.lock* ./
+COPY package.json yarn.lock ./
 
 # Install dependencies (handle absence of yarn.lock gracefully)
 RUN yarn install --frozen-lockfile

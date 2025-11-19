@@ -39,12 +39,21 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
+      - name: Show package.json and yarn.lock checksums
+        run: |
+          echo "package.json checksum:"
+          sha256sum package.json
+          echo "yarn.lock checksum:"
+          sha256sum yarn.lock
+
       - name: Docker build (with cache)
         uses: docker/build-push-action@v5
         with:
           context: .
           file: Dockerfile
           tags: questionnaire-frontend:latest
-          load: true
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          outputs: type=docker
+          cache-from: type=gha,scope=buildx-v2
+          cache-to: type=gha,mode=max,scope=buildx-v2
+          build-args: |
+            BUILDKIT_INLINE_CACHE=1
