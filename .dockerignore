@@ -3,8 +3,8 @@
 # build
 
 # # VCS & CI metadata
-# .git
-# .github
+.git
+.github
 
 # # Logs & temp files
 # npm-debug.log*
