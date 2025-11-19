@@ -28,13 +28,4 @@ jobs:
 
       - name: Install dependencies
         run: yarn install --frozen-lockfile
-
-      - name: Build
-        run: yarn build
-
-      - name: Upload build artifact (optional)
-        if: success() && hashFiles('build/**/*') != ''
-        uses: actions/upload-artifact@v4
-        with:
-          name: build
-          path: build
+        if: steps.node-modules-cache.outputs.cache-hit != 'true'        
