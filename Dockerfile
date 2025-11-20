@@ -6,8 +6,16 @@ WORKDIR /app
 COPY package.json yarn.lock ./
 
 # Install dependencies (handle absence of yarn.lock gracefully)
-RUN yarn install --frozen-lockfile
-
+RUN --mount=type=cache,target=/usr/local/share/.cache/yarn \
+    --mount=type=cache,target=/root/.cache/yarn \
+    sh -c "\
+        echo 'Before yarn install:' && \
+        ls -lh /usr/local/share/.cache/yarn && \
+        ls -lh /root/.cache/yarn && \
+        yarn install --frozen-lockfile --prefer-offline && \
+        echo 'After yarn install:' && \
+        ls -lh /usr/local/share/.cache/yarn && \
+        ls -lh /root/.cache/yarn \
 # Copy the rest of the source
 COPY . .
 # Build static assets
