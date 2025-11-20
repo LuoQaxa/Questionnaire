@@ -9,13 +9,16 @@ COPY package.json yarn.lock ./
 RUN --mount=type=cache,target=/usr/local/share/.cache/yarn \
     --mount=type=cache,target=/root/.cache/yarn \
     sh -c "\
-        echo 'Before yarn install:' && \
-        ls -lh /usr/local/share/.cache/yarn && \
-        ls -lh /root/.cache/yarn && \
+        echo '=== Before yarn install ===' && \
+        du -sh /usr/local/share/.cache/yarn /root/.cache/yarn || echo 'cache dirs empty' && \
+        ls -lR /usr/local/share/.cache/yarn | head -n 20 || echo 'no files' && \
+        ls -lR /root/.cache/yarn | head -n 20 || echo 'no files' && \
+        echo '=== Running yarn install ===' && \
         yarn install --frozen-lockfile --prefer-offline && \
-        echo 'After yarn install:' && \
-        ls -lh /usr/local/share/.cache/yarn && \
-        ls -lh /root/.cache/yarn \
+        echo '=== After yarn install ===' && \
+        du -sh /usr/local/share/.cache/yarn /root/.cache/yarn && \
+        ls -lR /usr/local/share/.cache/yarn | head -n 20 && \
+        ls -lR /root/.cache/yarn | head -n 20 \
     "
 # Copy the rest of the source
 COPY . .
