@@ -16,6 +16,7 @@ RUN --mount=type=cache,target=/usr/local/share/.cache/yarn \
         echo 'After yarn install:' && \
         ls -lh /usr/local/share/.cache/yarn && \
         ls -lh /root/.cache/yarn \
+    "
 # Copy the rest of the source
 COPY . .
 # Build static assets
